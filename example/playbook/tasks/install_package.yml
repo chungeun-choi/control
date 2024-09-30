@@ -1,4 +1,9 @@
 ---
+- name: Sleep for 30 seconds
+  ansible.builtin.pause:
+    seconds: 30
+
+
 - name: Install a package
   ansible.builtin.apt:
     name: sshpass

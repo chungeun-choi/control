@@ -4,3 +4,9 @@
     src: ../example.txt
     dest: /tmp/example.txt
     mode: '0644'
+
+- name: Sleep for 30 seconds
+  ansible.builtin.pause:
+    seconds: 30
+
+
