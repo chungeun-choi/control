@@ -1,0 +1,12 @@
+---
+- name: Example Playbook with include_tasks
+  hosts: all
+  become: yes
+  strategy: control
+
+  tasks:
+    - name: Include task to copy a file
+      include_tasks: tasks/copy_file.yml
+
+    - name: Include task to install a package
+      include_tasks: tasks/install_package.yml
