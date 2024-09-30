@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  test_vm1:
+    build:
+      context: .
+      args:
+        - PASS=$(cat password)
+    container_name: vm1
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "220:22"
+      - "80:80"
+
+  test_vm2:
+    build:
+      context: .
+      args:
+        - PASS=$(cat password)
+    container_name: vm2
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "221:22"
+      - "81:80"
