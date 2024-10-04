@@ -1,7 +1,7 @@
 ### Overview 🙌🏻
 
 ---
-❗❗❗This content was developed with ansible-core 2.12 and ansible 5.0 versions.❗❗❗
+❗❗❗This content was developed with python 3.10, ansible-core 2.12 and ansible 5.0 versions.❗❗❗
 
 This document provides an example of how to execute a custom Ansible strategy module. The custom strategy module, `Control`, is not a command-line tool but an Ansible object (Python code) designed for asynchronous playbook execution.
 
@@ -46,8 +46,18 @@ This repository includes a FastAPI-based application (web service) that enables 
         ```
         
 3. Run the Application (Web Service)
-    
     The working directory is the `project root (./)`. (Navigate to the directory before proceeding)
+   - Create python virtual environment
+    
+        ```bash
+        # for mac 
+        ! python -m venv .venv
+        ! source ./.venv/bin/activate
+    
+        # for window
+        ! python -m venv .venv
+        ! .venv\Scripts\activate
+        ```
     - Install Dependency Modules     
         ```bash
         pip install -r requirements.txt
