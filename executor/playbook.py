@@ -2,7 +2,7 @@ from ansible import context
 from ansible.inventory.manager import InventoryManager
 from ansible.module_utils.common.collections import ImmutableDict
 from ansible.parsing.dataloader import DataLoader
-from ansible.plugins.strategy.control import StateManager
+from ansible.plugins.strategy.control import StateQueueManager
 from ansible.vars.manager import VariableManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
@@ -20,19 +20,20 @@ def _set_default_ctx():
     )
 
 
-class WebControlExecutor:
-    def __init__(self, playbook, inventory: str, passwords: dict = None, default: bool = True):
+class ExecuteController:
+    def __init__(self, playbook, inventory, executor_id: str, passwords: dict = None):
+        self._id = executor_id
         self._playbook = playbook
         self._inventory = inventory
         self._passwords = passwords
-        self._state_manager = StateManager()
-        if default:
-            _set_default_ctx()
+        self._state_queue_manager = StateQueueManager(executor_id=self._id)
+        _set_default_ctx()
 
     def run_playbook(self):
         load_manager = DataLoader()
         inventory_manager = InventoryManager(loader=load_manager, sources=self._inventory)
         variable_manager = VariableManager(loader=load_manager, inventory=inventory_manager)
+        variable_manager.extra_vars.update({"executor_id": self._id})
 
         executor = PlaybookExecutor(
             playbooks=self._playbook,
@@ -45,11 +46,13 @@ class WebControlExecutor:
         return executor.run()
 
     def stop_playbook(self):
-        self._state_manager.update_state("stop")
+        self._state_queue_manager.update_state("stop")
 
     def pause_playbook(self):
-        self._state_manager.update_state("pause")
+        self._state_queue_manager.update_state("pause")
 
     def restart_playbook(self):
-        self._state_manager.update_state("restart")
+        self._state_queue_manager.update_state("restart")
 
+    def get_state_playbook(self):
+        pass

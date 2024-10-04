@@ -2,37 +2,38 @@ import uuid, asyncio
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from typing import List, Optional, Dict
-from executor.playbook import WebControlExecutor
+from executor.playbook import ExecuteController
 
 
-# 라우터 생성
 router = APIRouter()
+executors: Dict[str, ExecuteController] = {}
 
-# 요청 데이터 모델 정의
+
 class PlaybookRequest(BaseModel):
     playbook: List[str]
     inventory: str
     passwords: Optional[dict] = None
 
-# 전역 Executor 객체를 저장하는 딕셔너리 (UUID로 식별)
-executors: Dict[str, WebControlExecutor] = {}
-
 @router.post("/run/")
 def run_playbook(request: PlaybookRequest, background_tasks: BackgroundTasks):
-    playbook_id = str(uuid.uuid4())
-    executor = WebControlExecutor(
+    executor_id = str(uuid.uuid4())
+    executor = ExecuteController(
         playbook=request.playbook,
         inventory=request.inventory,
-        passwords=request.passwords
+        passwords=request.passwords,
+        executor_id=executor_id,
     )
-    executors[playbook_id] = executor
+    executors[executor_id] = executor
 
     def run_in_background():
-        executor.run_playbook()
+        try:
+            executor.run_playbook()
+        finally:
+            del executors[executor_id]
 
     background_tasks.add_task(run_in_background)
 
-    return {"message": "Playbook executed", "result": "success", "playbook_id": playbook_id}
+    return {"message": "Playbook executed", "result": "success", "playbook_id": executor_id}
 
 @router.post("/stop/{playbook_id}")
 def stop_playbook(playbook_id: str):
