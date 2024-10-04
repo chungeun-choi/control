@@ -11,9 +11,9 @@
 </br>
 </br>
 
-This document provides an example of how to execute a custom Ansible strategy module. The custom strategy module, `Control`, is not a command-line tool but an Ansible object (Python code) designed for asynchronous playbook execution.
+This document provides an example of how to execute a custom Ansible strategy module. The custom strategy module, [`Control`](https://github.com/chungeun-choi/ansible-2.12.x/blob/stable-2.12/lib/ansible/plugins/strategy/control.py), is not a command-line tool but an Ansible object (Python code) designed for asynchronous playbook execution.
 
-This repository includes a FastAPI-based application (web service) that enables the execution of the developed `Control` strategy module. The execution structure is as follows.
+This repository includes a FastAPI-based application (web service) that enables the execution of the developed [`Control`](https://github.com/chungeun-choi/ansible-2.12.x/blob/stable-2.12/lib/ansible/plugins/strategy/control.py) strategy module. The execution structure is as follows.
 
 ![img.png](docs/arch.png)
 
