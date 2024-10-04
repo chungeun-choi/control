@@ -1,6 +1,6 @@
 ## Overview 🙌🏻
 
-❗❗❗This example works correctly with the versions listed below. (Other versions have not been tested.)❗❗❗
+❗This example works correctly with the versions listed below. (Other versions have not been tested.)❗
 
 | Component                  | Version |
 |----------------------------|---------|
