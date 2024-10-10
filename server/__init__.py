@@ -1,4 +1,3 @@
-import traceback
 from uvicorn import run
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse

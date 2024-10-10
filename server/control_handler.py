@@ -1,4 +1,4 @@
-import uuid, asyncio
+import uuid
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from typing import List, Optional, Dict
@@ -7,7 +7,6 @@ from executor.playbook import ExecuteController
 
 router = APIRouter()
 executors: Dict[str, ExecuteController] = {}
-
 
 class PlaybookRequest(BaseModel):
     playbook: List[str]
@@ -33,31 +32,31 @@ def run_playbook(request: PlaybookRequest, background_tasks: BackgroundTasks):
 
     background_tasks.add_task(run_in_background)
 
-    return {"message": "Playbook executed", "result": "success", "playbook_id": executor_id}
+    return {"message": "Playbook executed", "result": "success", "executor_id": executor_id}
 
-@router.post("/stop/{playbook_id}")
-def stop_playbook(playbook_id: str):
-    if playbook_id not in executors:
+@router.post("/stop/{executor_id}")
+def stop_playbook(executor_id: str):
+    if executor_id not in executors:
         raise HTTPException(status_code=400, detail="Invalid playbook ID")
 
-    executors[playbook_id].stop_playbook()
+    executors[executor_id].stop_playbook()
 
-    return {"message": f"Playbook with ID {playbook_id} stopped"}
+    return {"message": f"Playbook with ID {executor_id} stopped"}
 
-@router.post("/pause/{playbook_id}")
-def pause_playbook(playbook_id: str):
-    if playbook_id not in executors:
+@router.post("/pause/{executor_id}")
+def pause_playbook(executor_id: str):
+    if executor_id not in executors:
         raise HTTPException(status_code=400, detail="Invalid playbook ID")
 
-    executors[playbook_id].pause_playbook()
+    executors[executor_id].pause_playbook()
 
-    return {"message": f"Playbook with ID {playbook_id} paused"}
+    return {"message": f"Playbook with ID {executor_id} paused"}
 
-@router.post("/restart/{playbook_id}")
-def restart_playbook(playbook_id: str):
-    if playbook_id not in executors:
+@router.post("/restart/{executor_id}")
+def restart_playbook(executor_id: str):
+    if executor_id not in executors:
         raise HTTPException(status_code=400, detail="Invalid playbook ID")
 
-    executors[playbook_id].restart_playbook()
+    executors[executor_id].restart_playbook()
 
-    return {"message": f"Playbook with ID {playbook_id} restarted"}
+    return {"message": f"Playbook with ID {executor_id} restarted"}
