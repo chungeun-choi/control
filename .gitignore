@@ -330,5 +330,5 @@ pyrightconfig.json
 [Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
-ansible_log.log
+ansible_results.log
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,python,venv,macos
