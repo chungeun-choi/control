@@ -1,6 +1,6 @@
 annotated-types==0.7.0
 ansible==5.5.0
-ansible-core @ git+https://github.com/chungeun-choi/ansible-2.12.x.git@d466d90b556dca14329375d18144927a0bda2112
+ansible-core @ git+https://github.com/chungeun-choi/ansible-2.12.x.git
 anyio==4.6.0
 cffi==1.17.1
 click==8.1.7

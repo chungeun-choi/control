@@ -8,6 +8,10 @@ from ansible.executor.playbook_executor import PlaybookExecutor
 
 
 def _set_default_ctx():
+    """
+    Set default Ansible CLI arguments in the context. These settings include connection details,
+    user privileges, verbosity level, and other execution options.
+    """
     context.CLIARGS = ImmutableDict(
         tags={}, listtags=False, listtasks=False, listhosts=False, syntax=False,
         connection='ssh',
@@ -21,7 +25,21 @@ def _set_default_ctx():
 
 
 class ExecuteController:
+    """
+    A controller class for managing the execution of Ansible playbooks. This class supports starting,
+    pausing, stopping, and restarting the playbook execution.
+    """
+
     def __init__(self, playbook, inventory, executor_id: str, passwords: dict = None):
+        """
+        Initialize the ExecuteController with playbook, inventory, executor ID, and optional passwords.
+
+        Args:
+            playbook (str): Path to the Ansible playbook file.
+            inventory (str): Path to the Ansible inventory file.
+            executor_id (str): Unique identifier for the executor.
+            passwords (dict): Optional dictionary of passwords for playbook execution.
+        """
         self._id = executor_id
         self._playbook = playbook
         self._inventory = inventory
@@ -30,11 +48,15 @@ class ExecuteController:
         _set_default_ctx()
 
     def run_playbook(self):
-        load_manager = DataLoader()
-        inventory_manager = InventoryManager(loader=load_manager, sources=self._inventory)
-        variable_manager = VariableManager(loader=load_manager, inventory=inventory_manager)
-        variable_manager.extra_vars.update({"executor_id": self._id})
+        """
+        Execute the specified Ansible playbook using the provided inventory and variables.
+        """
+        load_manager = DataLoader()  # Responsible for loading data from YAML or JSON files
+        inventory_manager = InventoryManager(loader=load_manager, sources=self._inventory)  # Manages inventory
+        variable_manager = VariableManager(loader=load_manager, inventory=inventory_manager)  # Manages variables
+        variable_manager.extra_vars.update({"executor_id": self._id})  # Add executor_id to extra variables
 
+        # Initialize the PlaybookExecutor with playbook, inventory, variables, and passwords
         executor = PlaybookExecutor(
             playbooks=self._playbook,
             inventory=inventory_manager,
@@ -43,16 +65,23 @@ class ExecuteController:
             passwords=self._passwords,
         )
 
-        return executor.run()
+        return executor.run()  # Run the playbook and return the exit code
 
     def stop_playbook(self):
+        """
+        Stop the playbook execution by updating the state to 'stop'.
+        """
         self._state_queue_manager.update_state("stop")
 
     def pause_playbook(self):
+        """
+        Pause the playbook execution by updating the state to 'pause'.
+        """
         self._state_queue_manager.update_state("pause")
 
     def restart_playbook(self):
+        """
+        Restart the playbook execution by updating the state to 'restart'.
+        """
         self._state_queue_manager.update_state("restart")
 
-    def get_state_playbook(self):
-        pass
